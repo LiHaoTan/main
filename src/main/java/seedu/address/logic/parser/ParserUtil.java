@@ -3,6 +3,7 @@ package seedu.address.logic.parser;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -37,6 +38,8 @@ public class ParserUtil {
 
 
     private static Parser dateTimeParser = new com.joestelmach.natty.Parser(TimeZone.getDefault()); // TODO timezones
+    // TODO decide if this is the right class
+    public static final DateTimeFormatter DATE_TIME_FORMAT = DateTimeFormatter.ISO_DATE_TIME;
 
     /**
      * Returns the specified index in the {@code command} if it is a positive unsigned integer
@@ -122,11 +125,9 @@ public class ParserUtil {
     }
 
     /**
-     * Parses Date strings into ZonedDateTime
-     * @param dateTime
-     * @return
+     * Parses Date strings into a {@code ZonedDateTime}.
      */
-    public static Optional<ZonedDateTime> parseDateTimeString(String dateTime) throws IllegalValueException {
+    public static ZonedDateTime parseDateTimeString(String dateTime) throws IllegalValueException {
         List<DateGroup> groups = dateTimeParser.parse(dateTime);
         for (DateGroup group : groups) {
             List<Date> dates = group.getDates();
@@ -138,8 +139,8 @@ public class ParserUtil {
                 // TODO use a ZonedDateTime so user can see time in his timezone, perhaps
                 // Instant can be used where possible and only when reading input and output from user
                 // we use ZonedDateTime
-                ZonedDateTime zonedDateTime = ZonedDateTime.ofInstant( instant , zoneId );
-                return Optional.of(zonedDateTime);
+                ZonedDateTime zonedDateTime = ZonedDateTime.ofInstant(instant, zoneId);
+                return zonedDateTime;
             }
         }
         throw new IllegalValueException(dateTime + "TODO is not a valid date.");

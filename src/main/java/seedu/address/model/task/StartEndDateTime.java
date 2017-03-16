@@ -10,6 +10,7 @@ public class StartEndDateTime {
     public StartEndDateTime(ZonedDateTime startDateTime, ZonedDateTime endDateTime) {
         assert startDateTime != null && endDateTime != null;
 
+        // TODO check if endDateTime > startDateTime, this means endDateTime != startDateTime as well
         this.startDateTime = startDateTime;
         this.endDateTime = endDateTime;
     }
@@ -21,6 +22,5 @@ public class StartEndDateTime {
     public ZonedDateTime getEndDateTime() {
         return endDateTime;
     }
-
 
 }

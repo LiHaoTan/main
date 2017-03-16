@@ -35,57 +35,39 @@ public class AddCommand extends Command {
 
     /**
      * Creates an AddCommand using raw values.
-     * @param endDateTimeArgs
-     * @param startDateTimeArgs
-     * @param deadlineDateTimeArgs
      *
      * @throws IllegalValueException if any of the raw values are invalid
      */
     public AddCommand(String name, Optional<String> deadlineDateTimeArgs, Optional<String> startDateTimeArgs,
                       Optional<String> endDateTimeArgs, Set<String> tags) throws IllegalValueException {
 
-        Optional<ZonedDateTime> deadlineDateTime = Optional.empty();
-        Optional<ZonedDateTime> startDateTime = Optional.empty();
-        Optional<ZonedDateTime> endDateTime = Optional.empty();
-
+        // TODO Improve SLAP build deadline
+        Optional<Deadline> deadline = Optional.empty();
         if (deadlineDateTimeArgs.isPresent()) {
-            deadlineDateTime = ParserUtil.parseDateTimeString(deadlineDateTimeArgs.get());
+            ZonedDateTime deadlineDateTime = ParserUtil.parseDateTimeString(deadlineDateTimeArgs.get());
+            deadline = Optional.of(new Deadline(deadlineDateTime));
         }
         // deadline = deadlineArgs.flatMap(ParserUtil::parseDateTimeString); TODO use lambda
 
+        // TODO Improve SLAP build startEndDateTime
+        Optional<StartEndDateTime> startEndDateTime = Optional.empty();
         boolean isStartDateTimePresent = startDateTimeArgs.isPresent();
 
         if (isStartDateTimePresent) {
             if (!endDateTimeArgs.isPresent()) {
                 throw new IllegalValueException("End date must exist if there is a start date");
+                // TODO maybe allow endDateTime to be optional
             }
-            startDateTime = ParserUtil.parseDateTimeString(startDateTimeArgs.get());
-            endDateTime = ParserUtil.parseDateTimeString(startDateTimeArgs.get());
+            ZonedDateTime startDateTime = ParserUtil.parseDateTimeString(startDateTimeArgs.get());
+            ZonedDateTime endDateTime = ParserUtil.parseDateTimeString(startDateTimeArgs.get());
+            startEndDateTime = Optional.of(new StartEndDateTime(startDateTime, endDateTime));
         }
 
-        //if (endDateTimeArgs.isPresent()) { TODO
-            //if (!isStartDateTimePresent) {
-            //    throw new IllegalValueException("End Date cannot exist without Start Date.");
-            //}
-            endDateTime = ParserUtil.parseDateTimeString(endDateTimeArgs.get());
-        //}
-
+        // TODO Improve SLAP build tags
         final Set<Tag> tagSet = new HashSet<>();
         for (String tagName : tags) {
             tagSet.add(new Tag(tagName));
         }
-
-        Optional<Deadline> deadline = Optional.empty();
-        if (deadlineDateTimeArgs.isPresent()) {
-            deadline = Optional.of(new Deadline(deadlineDateTime.get()));
-        }
-
-        Optional<StartEndDateTime> startEndDateTime = Optional.empty();
-
-        if (startDateTimeArgs.isPresent() && endDateTimeArgs.isPresent()) {
-            startEndDateTime = Optional.of(new StartEndDateTime(startDateTime.get(), endDateTime.get()));
-        }
-
 
         this.toAdd = new Task(
                 new Name(name),

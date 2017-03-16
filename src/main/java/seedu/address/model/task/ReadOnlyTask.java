@@ -13,12 +13,6 @@ public interface ReadOnlyTask {
     Name getName();
 
     /**
-     * The returned TagList is a deep copy of the internal TagList,
-     * changes on the returned list will not affect the person's internal tags.
-     */
-    UniqueTagList getTags();
-
-    /**
      * TODO getDeadline()
      */
     Optional<Deadline> getDeadline();
@@ -26,6 +20,12 @@ public interface ReadOnlyTask {
      * Start and End Date time
      */
     Optional<StartEndDateTime> getStartEndDateTime();
+
+    /**
+     * The returned TagList is a deep copy of the internal TagList,
+     * changes on the returned list will not affect the person's internal tags.
+     */
+    UniqueTagList getTags();
 
     /**
      * Returns true if both have the same state. (interfaces cannot override .equals)

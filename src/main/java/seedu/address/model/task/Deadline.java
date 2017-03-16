@@ -6,7 +6,9 @@ public class Deadline {
     private ZonedDateTime dateTime;
 
     public Deadline(ZonedDateTime dateTime) {
-        assert dateTime != null; // TODO
+        assert dateTime != null;
+
+        // TODO check that it is after today
 
         this.dateTime = dateTime;
     }

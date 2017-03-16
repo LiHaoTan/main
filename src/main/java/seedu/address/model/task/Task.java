@@ -34,18 +34,16 @@ public class Task implements ReadOnlyTask {
         this.tags = new UniqueTagList(tags); // protect internal tags from changes in the arg list
     }
 
-    public Task(Name name, UniqueTagList tags) { // TODO remove
-        assert !CollectionUtil.isAnyNull(name, tags);
-        this.name = name;
-        this.tags = new UniqueTagList(tags); // protect internal tags from changes in the arg list
-    }
-
     /**
      * Creates a copy of the given ReadOnlyTask.
      */
     public Task(ReadOnlyTask source) {
-        this(source.getName(), null, null, source.getTags());
+        this(source.getName(), source.getDeadline(), source.getStartEndDateTime(), source.getTags());
     }
+
+    //public Task(Name name2, UniqueTagList uniqueTagList) {
+        // TODO Auto-generated constructor stub
+    //}
 
     public void setName(Name name) {
         assert name != null;
