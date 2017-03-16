@@ -1,8 +1,10 @@
 package seedu.address.testutil;
 
 import seedu.address.model.tag.UniqueTagList;
+import seedu.address.model.task.Deadline;
 import seedu.address.model.task.Name;
 import seedu.address.model.task.ReadOnlyTask;
+import seedu.address.model.task.StartEndDateTime;
 
 /**
  * A mutable task object. For testing only.
@@ -52,5 +54,17 @@ public class TestTask implements ReadOnlyTask {
         sb.append("add " + this.getName().value + " ");
         this.getTags().asObservableList().stream().forEach(s -> sb.append("t/" + s.tagName + " "));
         return sb.toString();
+    }
+
+    @Override
+    public StartEndDateTime getStartEndDateTime() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Deadline getDeadline() {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

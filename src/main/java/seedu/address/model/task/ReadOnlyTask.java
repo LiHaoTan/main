@@ -17,6 +17,14 @@ public interface ReadOnlyTask {
     UniqueTagList getTags();
 
     /**
+     * Start and End Date time
+     */
+    StartEndDateTime getStartEndDateTime();
+    //StartEndDateTime getEndDateTime();
+
+    Deadline getDeadline();
+
+    /**
      * Returns true if both have the same state. (interfaces cannot override .equals)
      */
     default boolean isSameStateAs(ReadOnlyTask other) {

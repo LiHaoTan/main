@@ -82,4 +82,16 @@ public class Task implements ReadOnlyTask {
         return getAsText();
     }
 
+    @Override
+    public StartEndDateTime getStartEndDateTime() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Deadline getDeadline() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 }
