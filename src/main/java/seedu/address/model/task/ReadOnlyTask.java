@@ -1,5 +1,7 @@
 package seedu.address.model.task;
 
+import java.util.Optional;
+
 import seedu.address.model.tag.UniqueTagList;
 
 /**
@@ -17,12 +19,13 @@ public interface ReadOnlyTask {
     UniqueTagList getTags();
 
     /**
+     * TODO getDeadline()
+     */
+    Optional<Deadline> getDeadline();
+    /**
      * Start and End Date time
      */
-    StartEndDateTime getStartEndDateTime();
-    //StartEndDateTime getEndDateTime();
-
-    Deadline getDeadline();
+    Optional<StartEndDateTime> getStartEndDateTime();
 
     /**
      * Returns true if both have the same state. (interfaces cannot override .equals)

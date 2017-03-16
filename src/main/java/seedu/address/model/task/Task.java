@@ -1,6 +1,7 @@
 package seedu.address.model.task;
 
 import java.util.Objects;
+import java.util.Optional;
 
 import seedu.address.commons.util.CollectionUtil;
 import seedu.address.model.tag.UniqueTagList;
@@ -15,10 +16,25 @@ public class Task implements ReadOnlyTask {
 
     private UniqueTagList tags;
 
+    private Optional<StartEndDateTime> startEndDateTime;
+
+    private Optional<Deadline> deadline;
+
     /**
-     * Every field must be present and not null.
+     * Every field must be present and not null. // TODO
+     * @param startEndDateTime
+     * @param deadline
      */
-    public Task(Name name, UniqueTagList tags) {
+    public Task(Name name, Optional<Deadline> deadline, Optional<StartEndDateTime> startEndDateTime,
+            UniqueTagList tags) {
+        assert !CollectionUtil.isAnyNull(name, deadline, startEndDateTime, tags);
+        this.name = name;
+        this.deadline = deadline;
+        this.startEndDateTime = startEndDateTime;
+        this.tags = new UniqueTagList(tags); // protect internal tags from changes in the arg list
+    }
+
+    public Task(Name name, UniqueTagList tags) { // TODO remove
         assert !CollectionUtil.isAnyNull(name, tags);
         this.name = name;
         this.tags = new UniqueTagList(tags); // protect internal tags from changes in the arg list
@@ -28,7 +44,7 @@ public class Task implements ReadOnlyTask {
      * Creates a copy of the given ReadOnlyTask.
      */
     public Task(ReadOnlyTask source) {
-        this(source.getName(), source.getTags());
+        this(source.getName(), null, null, source.getTags());
     }
 
     public void setName(Name name) {
@@ -41,6 +57,29 @@ public class Task implements ReadOnlyTask {
         return name;
     }
 
+
+    @Override
+    public Optional<StartEndDateTime> getStartEndDateTime() {
+        return startEndDateTime;
+    }
+
+    /**
+     * TODO Only accepts a StartEndDateTime if not there is no point updating the value
+     */
+    public void setStartEndDateTime(StartEndDateTime dateTime) {
+        assert dateTime != null;
+        this.startEndDateTime = Optional.of(dateTime);
+    }
+
+    @Override
+    public Optional<Deadline> getDeadline() {
+        return deadline;
+    }
+
+    public void setDeadline(Deadline dateTime) {
+        assert dateTime != null;
+        this.deadline = Optional.of(dateTime);
+    }
 
     @Override
     public UniqueTagList getTags() {
@@ -80,18 +119,6 @@ public class Task implements ReadOnlyTask {
     @Override
     public String toString() {
         return getAsText();
-    }
-
-    @Override
-    public StartEndDateTime getStartEndDateTime() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public Deadline getDeadline() {
-        // TODO Auto-generated method stub
-        return null;
     }
 
 }

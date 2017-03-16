@@ -1,5 +1,7 @@
 package seedu.address.testutil;
 
+import java.util.Optional;
+
 import seedu.address.model.tag.UniqueTagList;
 import seedu.address.model.task.Deadline;
 import seedu.address.model.task.Name;
@@ -57,13 +59,13 @@ public class TestTask implements ReadOnlyTask {
     }
 
     @Override
-    public StartEndDateTime getStartEndDateTime() {
+    public Optional<StartEndDateTime> getStartEndDateTime() {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public Deadline getDeadline() {
+    public Optional<Deadline> getDeadline() {
         // TODO Auto-generated method stub
         return null;
     }
