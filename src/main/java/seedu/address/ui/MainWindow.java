@@ -1,22 +1,41 @@
 package seedu.address.ui;
 
+import java.util.logging.Logger;
+
+import com.google.common.eventbus.Subscribe;
+
+import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputControl;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Region;
+import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import seedu.address.commons.core.Config;
 import seedu.address.commons.core.GuiSettings;
+import seedu.address.commons.core.LogsCenter;
 import seedu.address.commons.events.ui.ExitAppRequestEvent;
+import seedu.address.commons.events.ui.NewResultAvailableEvent;
+import seedu.address.commons.events.ui.PersonPanelSelectionChangedEvent;
 import seedu.address.commons.util.FxViewUtil;
 import seedu.address.logic.Logic;
+import seedu.address.logic.commands.CommandResult;
+import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.UserPrefs;
 import seedu.address.model.task.ReadOnlyTask;
+
+
 
 /**
  * The Main Window. Provides the basic application layout containing
@@ -24,36 +43,56 @@ import seedu.address.model.task.ReadOnlyTask;
  */
 public class MainWindow extends UiPart<Region> {
 
-    private static final String ICON = "/images/address_book_32.png";
-    private static final String FXML = "MainWindow.fxml";
+    private static final String ICON = "/images/Icon.png";
+    private static final String FXML = "Overview.fxml";
     private static final int MIN_HEIGHT = 600;
-    private static final int MIN_WIDTH = 450;
+    private static final int MIN_WIDTH = 800;
 
     private Stage primaryStage;
     private Logic logic;
 
+    // CommandBox
+    private final Logger logger = LogsCenter.getLogger(CommandBox.class);
+    public static final String ERROR_STYLE_CLASS = "error";
+
+    //ResultDisplay
+    private static final Logger logger2 = LogsCenter.getLogger(MainWindow.class);
+    private final StringProperty displayed = new SimpleStringProperty("");
+
     // Independent Ui parts residing in this Ui container
-    private BrowserPanel browserPanel;
-    private PersonListPanel personListPanel;
+    //private BrowserPanel browserPanel;
+    //private PersonListPanel personListPanel;
     private Config config;
 
-    @FXML
-    private AnchorPane browserPlaceholder;
 
     @FXML
-    private AnchorPane commandBoxPlaceholder;
+    private TextField commandTextField;
+
+    @FXML
+    private TextArea resultDisplay;
+
+    @FXML
+    private ListView<ReadOnlyTask> personListView;
+
+    @FXML
+    private WebView browser;
+
+    //@FXML
+    //private AnchorPane browserPlaceholder;
+
+    //@FXML
+    //private AnchorPane commandBoxPlaceholder;
 
     @FXML
     private MenuItem helpMenuItem;
 
-    @FXML
-    private AnchorPane personListPanelPlaceholder;
+    //@FXML
+    //private AnchorPane personListPanelPlaceholder;
 
-    @FXML
-    private AnchorPane resultDisplayPlaceholder;
+    //@FXML
+    //private AnchorPane resultDisplayPlaceholder;
 
-    @FXML
-    private AnchorPane statusbarPlaceholder;
+
 
     public MainWindow(Stage primaryStage, Config config, UserPrefs prefs, Logic logic) {
         super(FXML);
@@ -72,6 +111,10 @@ public class MainWindow extends UiPart<Region> {
         primaryStage.setScene(scene);
 
         setAccelerators();
+
+        registerAsAnEventHandler(this);
+
+        setConnections(logic.getFilteredPersonList());
     }
 
     public Stage getPrimaryStage() {
@@ -112,29 +155,29 @@ public class MainWindow extends UiPart<Region> {
         });
     }
 
-    void fillInnerParts() {
-        browserPanel = new BrowserPanel(browserPlaceholder);
-        personListPanel = new PersonListPanel(getPersonListPlaceholder(), logic.getFilteredPersonList());
-        new ResultDisplay(getResultDisplayPlaceholder());
-        new StatusBarFooter(getStatusbarPlaceholder(), config.getAddressBookFilePath());
-        new CommandBox(getCommandBoxPlaceholder(), logic);
-    }
+    //void fillInnerParts() {
+        //browserPanel = new BrowserPanel(browserPlaceholder);
+        //personListPanel = new PersonListPanel(getPersonListPlaceholder(), logic.getFilteredPersonList());
+        //new ResultDisplay(getResultDisplayPlaceholder());
+        //new StatusBarFooter(getStatusbarPlaceholder(), config.getAddressBookFilePath());
+        //new CommandBox(getCommandBoxPlaceholder(), logic);
+    //}
 
-    private AnchorPane getCommandBoxPlaceholder() {
-        return commandBoxPlaceholder;
-    }
+    //private AnchorPane getCommandBoxPlaceholder() {
+        //return commandBoxPlaceholder;
+    //}
 
-    private AnchorPane getStatusbarPlaceholder() {
-        return statusbarPlaceholder;
-    }
+    //private AnchorPane getStatusbarPlaceholder() {
+        //return statusbarPlaceholder;
+    //}
 
-    private AnchorPane getResultDisplayPlaceholder() {
-        return resultDisplayPlaceholder;
-    }
+    //private AnchorPane getResultDisplayPlaceholder() {
+        //return resultDisplayPlaceholder;
+    //}
 
-    private AnchorPane getPersonListPlaceholder() {
-        return personListPanelPlaceholder;
-    }
+    //private AnchorPane getPersonListPlaceholder() {
+        //return personListPanelPlaceholder;
+    //}
 
     void hide() {
         primaryStage.hide();
@@ -195,16 +238,104 @@ public class MainWindow extends UiPart<Region> {
         raise(new ExitAppRequestEvent());
     }
 
-    public PersonListPanel getPersonListPanel() {
-        return this.personListPanel;
-    }
+    //public PersonListPanel getPersonListPanel() {
+        //return this.personListPanel;
+    //}
 
+    //***********BROWSER******************
     void loadPersonPage(ReadOnlyTask person) {
-        browserPanel.loadPersonPage(person);
+        loadPage("https://www.google.com.sg/#safe=off&q=" + person.getName().value.replaceAll(" ", "+"));
     }
 
+    public void loadPage(String url) {
+        browser.getEngine().load(url);
+    }
+
+    /**
+     * Frees resources allocated to the browser.
+     */
     void releaseResources() {
-        browserPanel.freeResources();
+        browser = null;
     }
 
+  //***********CommandBox******************
+    @FXML
+    private void handleCommandInputChanged() {
+        try {
+            CommandResult commandResult = logic.execute(commandTextField.getText());
+
+            // process result of the command
+            setStyleToIndicateCommandSuccess();
+            commandTextField.setText("");
+            logger.info("Result: " + commandResult.feedbackToUser);
+            raise(new NewResultAvailableEvent(commandResult.feedbackToUser));
+
+        } catch (CommandException e) {
+            // handle command failure
+            setStyleToIndicateCommandFailure();
+            logger.info("Invalid command: " + commandTextField.getText());
+            raise(new NewResultAvailableEvent(e.getMessage()));
+        }
+    }
+
+    /**
+     * Sets the command box style to indicate a successful command.
+     */
+    private void setStyleToIndicateCommandSuccess() {
+        commandTextField.getStyleClass().remove(ERROR_STYLE_CLASS);
+    }
+
+    /**
+     * Sets the command box style to indicate a failed command.
+     */
+    private void setStyleToIndicateCommandFailure() {
+        commandTextField.getStyleClass().add(ERROR_STYLE_CLASS);
+    }
+
+
+  //***********ResultDisplay******************
+    @Subscribe
+    private void handleNewResultAvailableEvent(NewResultAvailableEvent event) {
+        logger2.info(LogsCenter.getEventHandlingLogMessage(event));
+        displayed.setValue(event.message);
+    }
+
+  //***********PersonListPanel******************
+    private void setConnections(ObservableList<ReadOnlyTask> personList) {
+        personListView.setItems(personList);
+        personListView.setCellFactory(listView -> new PersonListViewCell());
+        setEventHandlerForSelectionChangeEvent();
+    }
+
+    private void setEventHandlerForSelectionChangeEvent() {
+        personListView.getSelectionModel().selectedItemProperty()
+                .addListener((observable, oldValue, newValue) -> {
+                    if (newValue != null) {
+                        logger2.fine("Selection in person list panel changed to : '" + newValue + "'");
+                        raise(new PersonPanelSelectionChangedEvent(newValue));
+                    }
+                });
+    }
+
+    public void scrollTo(int index) {
+        Platform.runLater(() -> {
+            personListView.scrollTo(index);
+            personListView.getSelectionModel().clearAndSelect(index);
+        });
+    }
+
+    class PersonListViewCell extends ListCell<ReadOnlyTask> {
+
+        @Override
+        protected void updateItem(ReadOnlyTask person, boolean empty) {
+            super.updateItem(person, empty);
+
+            if (empty || person == null) {
+                setGraphic(null);
+                setText(null);
+            } else {
+                setGraphic(new PersonCard(person, getIndex() + 1).getRoot());
+            }
+        }
+    }
 }

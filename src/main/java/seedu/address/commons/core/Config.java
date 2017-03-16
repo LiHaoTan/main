@@ -14,8 +14,8 @@ public class Config {
     private String appTitle = "iManager";
     private Level logLevel = Level.INFO;
     private String userPrefsFilePath = "preferences.json";
-    private String addressBookFilePath = "data/addressbook.xml";
-    private String addressBookName = "MyTaskList";
+    private String addressBookFilePath = "data/iManager.xml";
+    private String addressBookName = "iManager";
 
 
     public String getAppTitle() {

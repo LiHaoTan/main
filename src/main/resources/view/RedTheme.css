@@ -1,0 +1,68 @@
+.background {
+    -fx-background-color: #ff4745;
+}
+
+.background2 {
+    -fx-background-color: #f4f4f4;
+}
+
+.text-field,.text-area, .split-pane,.tab {
+	-fx-border-color: #2e4053;
+    -fx-border-width: 2;
+}
+
+.text-area {
+    -fx-font-size: 15pt;
+    -fx-text-fill: #2e4053;
+    -fx-font-family: "Arial Narrow";
+}
+
+.tab {
+	-fx-background-color: #2e4053;
+}
+
+.tab-label {
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 12pt;
+    -fx-font-family: "Arial Rounded MT Bold";
+}
+
+.tab:selected {
+    -fx-background-color: #1abc9c;
+}
+
+.tab:pressed, .tab:default:hover:pressed {
+  -fx-background-color: #14987e;
+}
+
+.button1 {
+	-fx-background-color: #ff7292;
+    -fx-text-fill: #ffffff;
+    -fx-font-weight: bold;
+    -fx-font-family: "Arial Rounded MT Bold";
+    -fx-border-color: #2e4053;
+    -fx-border-width: 2; /* Thickness */
+    -fx-border-radius: 0 0 8 8; /* roundness of border */
+    -fx-background-radius: 0 0 10 10; /* roundness of fill */
+}
+
+.button1:hover {
+    -fx-background-color: #ff8f94;
+}
+
+.button1:pressed, .button:default:hover:pressed {
+  -fx-background-color: #ff418b;
+}
+
+.button2 {
+	-fx-background-color: transparent;
+    -fx-background-radius: 50 50 50 50; /* roundness of fill */
+}
+
+.button2:hover {
+    -fx-background-color: #ff8f94;
+}
+
+.button2:pressed, .button:default:hover:pressed {
+  -fx-background-color: #f1cadb;
+}
