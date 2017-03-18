@@ -9,6 +9,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.ListCell;
@@ -36,7 +37,6 @@ import seedu.address.model.UserPrefs;
 import seedu.address.model.task.ReadOnlyTask;
 
 
-
 /**
  * The Main Window. Provides the basic application layout containing
  * a menu bar and space where other JavaFX elements can be placed.
@@ -45,23 +45,20 @@ public class MainWindow extends UiPart<Region> {
 
     private static final String ICON = "/images/Icon.png";
     private static final String FXML = "Overview.fxml";
-    private static final int MIN_HEIGHT = 600;
-    private static final int MIN_WIDTH = 800;
+    private static final int MIN_HEIGHT = 700;
+    private static final int MIN_WIDTH = 1000;
 
     private Stage primaryStage;
     private Logic logic;
 
     // CommandBox
-    private final Logger logger = LogsCenter.getLogger(CommandBox.class);
+    private final Logger logger = LogsCenter.getLogger(MainWindow.class);
     public static final String ERROR_STYLE_CLASS = "error";
 
     //ResultDisplay
-    private static final Logger logger2 = LogsCenter.getLogger(MainWindow.class);
     private final StringProperty displayed = new SimpleStringProperty("");
 
     // Independent Ui parts residing in this Ui container
-    //private BrowserPanel browserPanel;
-    //private PersonListPanel personListPanel;
     private Config config;
 
 
@@ -72,27 +69,25 @@ public class MainWindow extends UiPart<Region> {
     private TextArea resultDisplay;
 
     @FXML
-    private ListView<ReadOnlyTask> personListView;
+    private ListView<ReadOnlyTask> personListView1; // Today
+    
+    @FXML
+    private ListView<ReadOnlyTask> personListView2; // Pending
+    
+    @FXML
+    private ListView<ReadOnlyTask> personListView3; // Task
+    
+    @FXML
+    private ListView<ReadOnlyTask> personListView4; // Floating
+    
+    @FXML
+    private ListView<ReadOnlyTask> personListView5; // Overdue
 
     @FXML
     private WebView browser;
 
-    //@FXML
-    //private AnchorPane browserPlaceholder;
-
-    //@FXML
-    //private AnchorPane commandBoxPlaceholder;
-
     @FXML
     private MenuItem helpMenuItem;
-
-    //@FXML
-    //private AnchorPane personListPanelPlaceholder;
-
-    //@FXML
-    //private AnchorPane resultDisplayPlaceholder;
-
-
 
     public MainWindow(Stage primaryStage, Config config, UserPrefs prefs, Logic logic) {
         super(FXML);
@@ -109,9 +104,13 @@ public class MainWindow extends UiPart<Region> {
         setWindowDefaultSize(prefs);
         Scene scene = new Scene(getRoot());
         primaryStage.setScene(scene);
-
+        
         setAccelerators();
+        
+        browser.setOnKeyPressed(Event::consume); // To prevent triggering events for typing inside the
+        // loaded Web page.
 
+        resultDisplay.textProperty().bind(displayed);
         registerAsAnEventHandler(this);
 
         setConnections(logic.getFilteredPersonList());
@@ -154,30 +153,6 @@ public class MainWindow extends UiPart<Region> {
             }
         });
     }
-
-    //void fillInnerParts() {
-        //browserPanel = new BrowserPanel(browserPlaceholder);
-        //personListPanel = new PersonListPanel(getPersonListPlaceholder(), logic.getFilteredPersonList());
-        //new ResultDisplay(getResultDisplayPlaceholder());
-        //new StatusBarFooter(getStatusbarPlaceholder(), config.getAddressBookFilePath());
-        //new CommandBox(getCommandBoxPlaceholder(), logic);
-    //}
-
-    //private AnchorPane getCommandBoxPlaceholder() {
-        //return commandBoxPlaceholder;
-    //}
-
-    //private AnchorPane getStatusbarPlaceholder() {
-        //return statusbarPlaceholder;
-    //}
-
-    //private AnchorPane getResultDisplayPlaceholder() {
-        //return resultDisplayPlaceholder;
-    //}
-
-    //private AnchorPane getPersonListPlaceholder() {
-        //return personListPanelPlaceholder;
-    //}
 
     void hide() {
         primaryStage.hide();
@@ -243,7 +218,7 @@ public class MainWindow extends UiPart<Region> {
     //}
 
     //***********BROWSER******************
-    void loadPersonPage(ReadOnlyTask person) {
+    public void loadPersonPage(ReadOnlyTask person) {
         loadPage("https://www.google.com.sg/#safe=off&q=" + person.getName().value.replaceAll(" ", "+"));
     }
 
@@ -254,7 +229,7 @@ public class MainWindow extends UiPart<Region> {
     /**
      * Frees resources allocated to the browser.
      */
-    void releaseResources() {
+    public void releaseResources() {
         browser = null;
     }
 
@@ -296,22 +271,22 @@ public class MainWindow extends UiPart<Region> {
   //***********ResultDisplay******************
     @Subscribe
     private void handleNewResultAvailableEvent(NewResultAvailableEvent event) {
-        logger2.info(LogsCenter.getEventHandlingLogMessage(event));
+        logger.info(LogsCenter.getEventHandlingLogMessage(event));
         displayed.setValue(event.message);
     }
 
   //***********PersonListPanel******************
     private void setConnections(ObservableList<ReadOnlyTask> personList) {
-        personListView.setItems(personList);
-        personListView.setCellFactory(listView -> new PersonListViewCell());
+        personListView1.setItems(personList);
+        personListView1.setCellFactory(listView -> new PersonListViewCell());
         setEventHandlerForSelectionChangeEvent();
     }
 
     private void setEventHandlerForSelectionChangeEvent() {
-        personListView.getSelectionModel().selectedItemProperty()
+        personListView1.getSelectionModel().selectedItemProperty()
                 .addListener((observable, oldValue, newValue) -> {
                     if (newValue != null) {
-                        logger2.fine("Selection in person list panel changed to : '" + newValue + "'");
+                        logger.fine("Selection in person list panel changed to : '" + newValue + "'");
                         raise(new PersonPanelSelectionChangedEvent(newValue));
                     }
                 });
@@ -319,8 +294,8 @@ public class MainWindow extends UiPart<Region> {
 
     public void scrollTo(int index) {
         Platform.runLater(() -> {
-            personListView.scrollTo(index);
-            personListView.getSelectionModel().clearAndSelect(index);
+            personListView1.scrollTo(index);
+            personListView1.getSelectionModel().clearAndSelect(index);
         });
     }
 

@@ -19,6 +19,10 @@ public class PersonCard extends UiPart<Region> {
     @FXML
     private Label id;
     @FXML
+    private Label startdate;
+    @FXML
+    private Label duedate;
+    @FXML
     private FlowPane tags;
 
     public PersonCard(ReadOnlyTask person, int displayedIndex) {

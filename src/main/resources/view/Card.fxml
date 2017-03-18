@@ -3,66 +3,80 @@
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<HBox fx:id="cardPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="105.0" prefWidth="466.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+<HBox id="cardPane" fx:id="cardPane" prefHeight="79.0" prefWidth="517.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <VBox alignment="CENTER_LEFT" minHeight="105.0" prefHeight="105.0" prefWidth="218.0" stylesheets="@Extensions.css">
+      <VBox alignment="CENTER_LEFT" minHeight="0.0" prefHeight="77.0" prefWidth="310.0" HBox.hgrow="ALWAYS">
          <padding>
             <Insets bottom="5" left="15" right="5" top="5" />
          </padding>
          <children>
-            <HBox alignment="CENTER_LEFT" spacing="5">
+            <HBox alignment="CENTER_LEFT" spacing="5" VBox.vgrow="ALWAYS">
                <children>
-                  <HBox>
+                  <Label fx:id="id" styleClass="cell_event" HBox.hgrow="ALWAYS">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="event" styleClass="cell_event" text="\$event" HBox.hgrow="ALWAYS">
+                     <font>
+                        <Font name="System Bold" size="20.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            <FlowPane fx:id="tags" />
+         </children>
+      </VBox>
+      <VBox alignment="CENTER_LEFT" prefHeight="77.0" prefWidth="185.0" HBox.hgrow="ALWAYS">
+         <padding>
+            <Insets bottom="5" left="15" right="5" top="5" />
+         </padding>
+         <children>
+            <HBox prefHeight="41.0" prefWidth="172.0" spacing="5.0" VBox.vgrow="ALWAYS">
+               <children>
+                  <HBox prefHeight="100.0" prefWidth="172.0" spacing="5.0" HBox.hgrow="ALWAYS">
                      <children>
-                        <Label fx:id="id" styleClass="cell_big_label">
+                        <Label styleClass="cell_start" text="Start:" HBox.hgrow="SOMETIMES">
                            <font>
                               <Font size="20.0" />
                            </font>
                         </Label>
-                        <Label fx:id="event" styleClass="cell_big_label" text="\\$event">
+                        <Label fx:id="startdate" layoutX="10.0" layoutY="10.0" text="\$start_date" HBox.hgrow="ALWAYS">
                            <font>
-                              <Font name="System Bold" size="20.0" />
+                              <Font size="20.0" />
                            </font>
                         </Label>
                      </children>
                   </HBox>
                </children>
             </HBox>
-            <FlowPane fx:id="tags" />
-         </children>
-      </VBox>
-      <VBox alignment="CENTER_LEFT" minHeight="105.0" prefHeight="105.0" prefWidth="120.0">
-         <stylesheets>
-            <URL value="@DarkTheme.css" />
-            <URL value="@Extensions.css" />
-         </stylesheets>
-         <padding>
-            <Insets bottom="5" left="15" right="5" top="5" />
-         </padding>
-      </VBox>
-      <AnchorPane prefHeight="105.0" prefWidth="49.0" />
-      <VBox alignment="CENTER_LEFT" minHeight="105.0" prefHeight="105.0" prefWidth="245.0">
-         <padding>
-            <Insets bottom="5" left="15" right="5" top="5" />
-         </padding>
-         <children>
-            <Label fx:id="startDate" prefHeight="47.0" prefWidth="232.0" styleClass="cell_small_label" text="\\$start_date">
-               <font>
-                  <Font name="System Bold" size="15.0" />
-               </font>
-            </Label>
-            <Label fx:id="dueDate" prefHeight="47.0" prefWidth="232.0" styleClass="cell_small_label" text="\\$due_date">
-               <font>
-                  <Font name="System Bold" size="15.0" />
-               </font>
-            </Label>
+            <HBox prefHeight="16.0" prefWidth="172.0" spacing="13.0" VBox.vgrow="ALWAYS">
+               <children>
+                  <Label styleClass="cell_due" text="Due:" HBox.hgrow="ALWAYS">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="duedate" layoutX="10.0" layoutY="10.0" text="\$due_date" HBox.hgrow="ALWAYS">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </Label>
+               </children>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </HBox>
          </children>
       </VBox>
    </children>
+   <stylesheets>
+      <URL value="@RedTheme.css" />
+      <URL value="@Extensions.css" />
+   </stylesheets>
 </HBox>
